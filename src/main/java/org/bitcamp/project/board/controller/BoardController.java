@@ -167,7 +167,7 @@ public class BoardController {
                 ImageIO.write(thumbnail, "JPG", thumbFile);
 
                 fin.close(); // <-- 추가
-
+//
             } catch (IOException e) {
 
             }
