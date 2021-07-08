@@ -9,6 +9,8 @@ import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.dto.BoardDTO;
 import org.bitcamp.project.board.dto.ReplyDTO;
 import org.bitcamp.project.board.dto.UploadResultDTO;
+import org.bitcamp.project.board.entity.Board;
+import org.bitcamp.project.board.entity.Reply;
 import org.bitcamp.project.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/board")
+@RequestMapping("/boards")
 @RestController
 @Log4j2
 @RequiredArgsConstructor
@@ -53,16 +55,6 @@ public class BoardController {
 
         return ResponseEntity.ok(bno);
     }
-
-    //create reply
-    @PutMapping("/reply/{rno}")
-    public ResponseEntity<Long> replyCreate(@PathVariable Long rno , @RequestBody ReplyDTO replyDTO) {
-
-        log.info(rno+"replyCreate 컨트롤러 테스트 !!");
-
-        return ResponseEntity.ok(rno);
-    }
-
 
     // read 번호로 찾는경우 경로에 담으면댐
     @GetMapping("/{bno}")
@@ -91,6 +83,14 @@ public class BoardController {
         boardDTO.setBno(bno);
         boardService.update(boardDTO);
         return ResponseEntity.ok(boardDTO);
+    }
+
+    @PutMapping("/reply/{bno}")
+    public ResponseEntity<ReplyDTO> replyUpdate(@PathVariable Long bno , @RequestBody ReplyDTO replyDTO){
+        log.info("리플라이들어옴");
+        // 제이슨 번호 넘겨준상태
+        boardService.replyUpdate(bno,replyDTO);
+        return ResponseEntity.ok(replyDTO);
     }
 
     @ResponseBody

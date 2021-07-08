@@ -6,10 +6,11 @@ import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.common.dto.PageMaker;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.ReplyDTO;
 import org.bitcamp.project.board.dto.UploadResultDTO;
 import org.bitcamp.project.board.entity.Board;
 import org.bitcamp.project.board.entity.BoardImage;
-import org.bitcamp.project.board.repository.BoardImageRepository;
+import org.bitcamp.project.board.entity.Reply;
 import org.bitcamp.project.board.repository.BoardRepository;
 import org.bitcamp.project.board.repository.ReplyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,7 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
-    @Autowired
-    private  BoardImageRepository boardImageRepository;
+
 
 
     // dto 값을 엔티티 바꿔야한다..
@@ -100,6 +100,21 @@ public class BoardServiceImpl implements BoardService{
                 .build();
     }
 
+    @Override
+    public void replyUpdate(Long bno, ReplyDTO replyDTO) {
+        Optional<Board> board = boardRepository.findById(bno);
+        log.info(board +"8번게시물데이터");
+        // 8 게시물데이터
+        board.ifPresent(todo-> {
+           Reply reply = Reply.builder()
+                    .replyText(replyDTO.getReplyText())
+                    .board(todo)
+                    .build();
+            replyRepository.save(reply);
+            log.info(reply+"리플라이 새이브한값");
+        });
+
+     }
 
 
 }

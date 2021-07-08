@@ -3,6 +3,7 @@ package org.bitcamp.project.board.service;
 import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.ReplyDTO;
 import org.bitcamp.project.board.dto.UploadResultDTO;
 import org.bitcamp.project.board.entity.Board;
 import org.bitcamp.project.board.entity.BoardImage;
@@ -29,6 +30,12 @@ public interface BoardService {
                 .writer(board.getWriter())
                 .modDate(board.getModDate())
                 .regDate(board.getRegDate())
+                .build();
+    }
+    default ReplyDTO replyEntityToDTO(Reply reply) {
+        return ReplyDTO.builder()
+                .replyText(reply.getReplyText())
+                .board(reply.getBoard())
                 .build();
     }
 
@@ -61,4 +68,5 @@ public interface BoardService {
     ListResponseDTO<BoardDTO> list(ListRequestDTO listRequestDTO);
 
 
+    void replyUpdate(Long bno,ReplyDTO replyDTO);
 }

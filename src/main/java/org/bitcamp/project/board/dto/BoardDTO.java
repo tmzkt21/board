@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.bitcamp.project.board.entity.Board;
+import org.bitcamp.project.board.entity.BoardImage;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,6 +19,7 @@ public class BoardDTO {
     private String title;
     private String content;
     private String writer;
+    private List<BoardImage> boardImages;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 

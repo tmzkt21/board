@@ -127,8 +127,8 @@ class BoardApplicationTests {
     public void imageInsert() {
         Board board = Board.builder().title("새로운제목").build();
 
-        board.addImage(BoardImage.builder().uuid("파일아이디").build());
-        board.addImage(BoardImage.builder().uuid("파일아이디").build());
+        board.addImage(BoardImage.builder().uuid("파일아이디4").build());
+        board.addImage(BoardImage.builder().uuid("파일아이디3").build());
         // board title 가입인사 가 새로생겼고 그 bno 번호에 맞춰서
         // 중간 페이블에서 bno 번호 와  그에맞는 이미지이름이 2개가 생긴것을 볼수있다
         // 게시판하나에 파일이 여러개일경우..
