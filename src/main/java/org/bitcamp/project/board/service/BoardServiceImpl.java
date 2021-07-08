@@ -6,20 +6,20 @@ import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.common.dto.PageMaker;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.ListBoardDTO;
 import org.bitcamp.project.board.dto.ReplyDTO;
-import org.bitcamp.project.board.dto.UploadResultDTO;
 import org.bitcamp.project.board.entity.Board;
-import org.bitcamp.project.board.entity.BoardImage;
 import org.bitcamp.project.board.entity.Reply;
 import org.bitcamp.project.board.repository.BoardRepository;
 import org.bitcamp.project.board.repository.ReplyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -115,6 +115,15 @@ public class BoardServiceImpl implements BoardService{
         });
 
      }
+
+    @Override
+    public List<ListBoardDTO> getList() {
+        Pageable pageable = PageRequest.of(0,10, Sort.by("bno").descending());
+        Page<Object[]> result = boardRepository.getBoardList(pageable);
+        // 엔티티result 디티오
+        return result.getContent().stream()
+                .map(arr -> arrToDTO(arr)).collect(Collectors.toList());
+    }
 
 
 }

@@ -3,14 +3,12 @@ package org.bitcamp.project.board.service;
 import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.ListBoardDTO;
 import org.bitcamp.project.board.dto.ReplyDTO;
-import org.bitcamp.project.board.dto.UploadResultDTO;
 import org.bitcamp.project.board.entity.Board;
-import org.bitcamp.project.board.entity.BoardImage;
 import org.bitcamp.project.board.entity.Reply;
 
 import java.util.List;
-import java.util.Set;
 
 public interface BoardService {
     Long create(BoardDTO boardDTO);
@@ -32,10 +30,16 @@ public interface BoardService {
                 .regDate(board.getRegDate())
                 .build();
     }
-    default ReplyDTO replyEntityToDTO(Reply reply) {
-        return ReplyDTO.builder()
-                .replyText(reply.getReplyText())
-                .board(reply.getBoard())
+
+    default ListBoardDTO arrToDTO(Object[] arr) {
+
+        return ListBoardDTO.builder()
+                .bno((long)arr[0])
+                .title((String) arr[1])
+                .content((String) arr[2])
+                .writer((String) arr[3])
+                .uuid((String) arr[4])
+                .fileName((String) arr[5])
                 .build();
     }
 
@@ -69,4 +73,6 @@ public interface BoardService {
 
 
     void replyUpdate(Long bno,ReplyDTO replyDTO);
+
+    List<ListBoardDTO> getList();
 }

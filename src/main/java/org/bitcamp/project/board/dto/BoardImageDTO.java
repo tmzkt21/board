@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UploadResultDTO {
+public class BoardImageDTO {
 
     private String uuid;
     private String fileName;

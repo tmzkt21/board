@@ -7,10 +7,9 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.ListBoardDTO;
 import org.bitcamp.project.board.dto.ReplyDTO;
-import org.bitcamp.project.board.dto.UploadResultDTO;
-import org.bitcamp.project.board.entity.Board;
-import org.bitcamp.project.board.entity.Reply;
+import org.bitcamp.project.board.dto.BoardImageDTO;
 import org.bitcamp.project.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -23,7 +22,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
-import java.nio.Buffer;
 import java.nio.file.Files;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -129,13 +127,13 @@ public class BoardController {
 
     @ResponseBody
     @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<UploadResultDTO> upload(MultipartFile[] files) {
+    public List<BoardImageDTO> upload(MultipartFile[] files) {
         //컨트롤러에서 업로드한 파일은 MultipartFile 변수를 사용하여 전달받습니다.
         // MultipartFile 클래스는 파일에 대한 정보(파일 이름, 크기등)와 파일 관련 메서드(ex. 파일 저장)를 제공합니다.
         log.warn(path + "경로 체크");
         log.info("경로 체크");
         // ArrayList 주입시켜서 새로운 값이들어오면 점점늘어나게..
-        List<UploadResultDTO> result = new ArrayList<>();
+        List<BoardImageDTO> result = new ArrayList<>();
 
         // files 에있는것들을 한개씩 꺼내서 담는과정
         for (MultipartFile file:files) {
@@ -172,12 +170,21 @@ public class BoardController {
 
             }
             // 디티오에저장
-            result.add(UploadResultDTO.builder().uuid(uuid).fileName(fileName).build());
+            result.add(BoardImageDTO.builder().uuid(uuid).fileName(fileName).build());
 
 
         }
 
         return result;
     }
+
+    @GetMapping("/getList")
+    public ResponseEntity<List<ListBoardDTO>> getList() {
+
+        boardService.getList();
+
+      return   ResponseEntity.ok(boardService.getList());
+    }
+// 업로드할때 디비에 어떻게 저장할것인가..
 
 }
