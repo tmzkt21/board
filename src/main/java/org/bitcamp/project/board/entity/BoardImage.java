@@ -1,4 +1,4 @@
-package org.bitcamp.project.board.common.entity;
+package org.bitcamp.project.board.entity;
 
 import lombok.*;
 
@@ -13,11 +13,11 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @ToString
 @Getter
-public class FoodMenu {
+public class BoardImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mno;
+    private Long ino;
 
-    private String mname;
+    private String iname;
 }

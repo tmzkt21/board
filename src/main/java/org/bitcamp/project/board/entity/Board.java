@@ -4,6 +4,9 @@ import lombok.*;
 import org.bitcamp.project.board.common.entity.BaseEntity;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -20,6 +23,13 @@ public class Board extends BaseEntity {
     private String content;
     private String writer;
 
+    @Builder.Default
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BoardImage> boardImages = new HashSet<>();
+
+    //cascade 영속성 전이 즉 부모가 삭제되면 자식도 삭제 all 은 전부
+    //게시판이 삭제되면 그 이미지도 파일도 삭제한다는 뜻 set으로 넣어야한다
+
     public void changeTile(String title){
         this.title = title;
     }
@@ -29,5 +39,14 @@ public class Board extends BaseEntity {
     public void changeWriter(String writer){
         this.writer = writer;
     }
+    public void addImage(BoardImage image) {
+        boardImages.add(image);
+    }
 
+    public void removeImage(Long ino) {
+        boardImages = boardImages.stream()
+                .filter(bi -> bi.getIno().equals(ino) == false)
+                //새로 들어온 이미지 넘버와 안에있는 번호를 비교해서 틀리면 toset 새로 집어넣는다..?
+                .collect(Collectors.toSet());
+    }
 }

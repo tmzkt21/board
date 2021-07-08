@@ -1,4 +1,4 @@
-package org.bitcamp.project.board.common.dto;
+package org.bitcamp.project.board.dto;
 
 import lombok.*;
 
@@ -11,6 +11,4 @@ public class UploadResultDTO {
 
     private String uuid;
     private String fileName;
-
-
 }
