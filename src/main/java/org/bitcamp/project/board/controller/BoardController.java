@@ -7,6 +7,7 @@ import net.coobird.thumbnailator.Thumbnails;
 import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.ReplyDTO;
 import org.bitcamp.project.board.dto.UploadResultDTO;
 import org.bitcamp.project.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,16 @@ public class BoardController {
 
         return ResponseEntity.ok(bno);
     }
+
+    //create reply
+    @PutMapping("/reply/{rno}")
+    public ResponseEntity<Long> replyCreate(@PathVariable Long rno , @RequestBody ReplyDTO replyDTO) {
+
+        log.info(rno+"replyCreate 컨트롤러 테스트 !!");
+
+        return ResponseEntity.ok(rno);
+    }
+
 
     // read 번호로 찾는경우 경로에 담으면댐
     @GetMapping("/{bno}")
@@ -162,6 +173,8 @@ public class BoardController {
             }
             // 디티오에저장
             result.add(UploadResultDTO.builder().uuid(uuid).fileName(fileName).build());
+
+
         }
 
         return result;

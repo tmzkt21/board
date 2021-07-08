@@ -16,8 +16,9 @@ import javax.persistence.Id;
 public class BoardImage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ino;
+    private String uuid;
 
-    private String iname;
+    private String fileName;
+
+    private boolean main;
 }

@@ -6,15 +6,19 @@ import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.common.dto.PageMaker;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.UploadResultDTO;
 import org.bitcamp.project.board.entity.Board;
+import org.bitcamp.project.board.entity.BoardImage;
+import org.bitcamp.project.board.repository.BoardImageRepository;
 import org.bitcamp.project.board.repository.BoardRepository;
+import org.bitcamp.project.board.repository.ReplyRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +27,9 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
+    private final ReplyRepository replyRepository;
+    @Autowired
+    private  BoardImageRepository boardImageRepository;
 
 
     // dto 값을 엔티티 바꿔야한다..
@@ -92,6 +99,7 @@ public class BoardServiceImpl implements BoardService{
                 .listRequestDTO(dto)
                 .build();
     }
+
 
 
 }

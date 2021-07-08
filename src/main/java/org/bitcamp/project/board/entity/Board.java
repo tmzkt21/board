@@ -43,10 +43,10 @@ public class Board extends BaseEntity {
         boardImages.add(image);
     }
 
-    public void removeImage(Long ino) {
+    public void removeImage(String uuid) {
         boardImages = boardImages.stream()
-                .filter(bi -> bi.getIno().equals(ino) == false)
-                //새로 들어온 이미지 넘버와 안에있는 번호를 비교해서 틀리면 toset 새로 집어넣는다..?
+                .filter(bi -> bi.getUuid().equals(uuid) == false)
+                //새로 들어온 이미지 넘버와 안에있는 uuid를 비교해서 틀리면 toset 새로 집어넣는다..?
                 .collect(Collectors.toSet());
     }
 }

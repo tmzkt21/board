@@ -30,10 +30,10 @@ class BoardApplicationTests {
     ReplyRepository replyRepository;
 
 
-    // 게시물 1000개 만들기
+    // 게시물 200개 만들기
     @Test
     public void boardInsert() {
-        IntStream.rangeClosed(1, 1000).forEach(i -> {
+        IntStream.rangeClosed(1, 200).forEach(i -> {
             boardRepository.save(Board.builder()
                     .title("게시물제목" + i)
                     .content("게시물내용" + i)
@@ -58,10 +58,11 @@ class BoardApplicationTests {
     // 36번째 rno 로 찾기
     @Test
     public void replyRead() {
+        // Optional = null이 될 수도 있는 객체”을 감싸고 있는 일종의 래퍼 클래스
         Optional<Reply> reply = replyRepository.findById(36L);
-        log.info(reply);
+            log.info(reply+"reply");
         reply.ifPresent(todo -> {
-            log.info(todo + "결과");
+            log.info(todo + "ifPresent reply");
         });
     }
 
@@ -71,13 +72,14 @@ class BoardApplicationTests {
         replyRepository.deleteById(26L);
     }
 
-    // 업데이트 엔티티방식 제목변경
+    // 업데이트 엔티티방식 제목변경 80
     @Test
     public void replyUpdate() {
-        Optional<Reply> reply = replyRepository.findById(80L);
-        reply.ifPresent(todo -> {
-            todo.changeReplyText("댓글수정");
+        Optional<Reply> result = replyRepository.findById(80L);
+        result.ifPresent(todo -> {
+            todo.changeReplyText("댓글변경");
             replyRepository.save(todo);
+            log.info(todo);
         });
     }
 
@@ -125,8 +127,8 @@ class BoardApplicationTests {
     public void imageInsert() {
         Board board = Board.builder().title("새로운제목").build();
 
-        board.addImage(BoardImage.builder().iname("파일이름1").build());
-        board.addImage(BoardImage.builder().iname("파일이름2").build());
+        board.addImage(BoardImage.builder().uuid("파일아이디").build());
+        board.addImage(BoardImage.builder().uuid("파일아이디").build());
         // board title 가입인사 가 새로생겼고 그 bno 번호에 맞춰서
         // 중간 페이블에서 bno 번호 와  그에맞는 이미지이름이 2개가 생긴것을 볼수있다
         // 게시판하나에 파일이 여러개일경우..
