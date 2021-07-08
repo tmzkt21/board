@@ -172,11 +172,24 @@ public class BoardController {
             // 디티오에저장
             result.add(BoardImageDTO.builder().uuid(uuid).fileName(fileName).build());
 
+        // 업로드시 보드이미지엔티티에저장
 
         }
+//        boardService.fileSave(result);
 
         return result;
+
     }
+
+    @PostMapping("/")
+    public ResponseEntity<Long> BoardRegister(@RequestBody BoardDTO dto) {
+        log.info(dto +"넘어온디티오값");
+
+        Long fno = boardService.boardRegister(dto);
+
+        return ResponseEntity.ok(fno);
+    }
+
 
     @GetMapping("/getList")
     public ResponseEntity<List<ListBoardDTO>> getList() {

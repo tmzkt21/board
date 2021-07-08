@@ -6,10 +6,13 @@ import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.common.dto.PageMaker;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.BoardImageDTO;
 import org.bitcamp.project.board.dto.ListBoardDTO;
 import org.bitcamp.project.board.dto.ReplyDTO;
 import org.bitcamp.project.board.entity.Board;
+import org.bitcamp.project.board.entity.BoardImage;
 import org.bitcamp.project.board.entity.Reply;
+import org.bitcamp.project.board.repository.BoardImageRepository;
 import org.bitcamp.project.board.repository.BoardRepository;
 import org.bitcamp.project.board.repository.ReplyRepository;
 import org.springframework.data.domain.Page;
@@ -29,6 +32,7 @@ public class BoardServiceImpl implements BoardService{
 
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
+    private final BoardImageRepository boardImageRepository;
 
 
 
@@ -123,6 +127,24 @@ public class BoardServiceImpl implements BoardService{
         // 엔티티result 디티오
         return result.getContent().stream()
                 .map(arr -> arrToDTO(arr)).collect(Collectors.toList());
+    }
+
+    @Override
+    public Long fileSave(List<BoardImageDTO> result) {
+
+        BoardImage image = imageDtoToEntity(result);
+        boardImageRepository.save(image);
+        log.info(image);
+        return null;
+    }
+
+    @Override
+    public Long boardRegister(BoardDTO dto) {
+        Board entity = dtoToEntity(dto);
+
+        Board result = boardRepository.save(entity);
+
+        return result.getBno();
     }
 
 

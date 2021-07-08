@@ -3,12 +3,16 @@ package org.bitcamp.project.board.service;
 import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.dto.BoardDTO;
+import org.bitcamp.project.board.dto.BoardImageDTO;
 import org.bitcamp.project.board.dto.ListBoardDTO;
 import org.bitcamp.project.board.dto.ReplyDTO;
 import org.bitcamp.project.board.entity.Board;
+import org.bitcamp.project.board.entity.BoardImage;
 import org.bitcamp.project.board.entity.Reply;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public interface BoardService {
     Long create(BoardDTO boardDTO);
@@ -43,6 +47,16 @@ public interface BoardService {
                 .build();
     }
 
+    default BoardImage imageDtoToEntity(List<BoardImageDTO> dto) {
+        Set<BoardImage> imageSet = dto.stream()
+                .map(imageDTO -> BoardImage.builder()
+                        .uuid(imageDTO.getUuid())
+                        .fileName(imageDTO.getFileName())
+                        .build())
+                .collect(Collectors.toSet());
+        return null;
+    }
+
 
 
     //        default FoodStore dtoToEntity(FoodStoreDTO storeDTO){
@@ -75,4 +89,8 @@ public interface BoardService {
     void replyUpdate(Long bno,ReplyDTO replyDTO);
 
     List<ListBoardDTO> getList();
+
+    Long fileSave(List<BoardImageDTO> result);
+
+    Long boardRegister(BoardDTO dto);
 }
