@@ -19,6 +19,7 @@ public class BoardDTO {
     private String title;
     private String content;
     private String writer;
+    private String replyText;
     private List<BoardImage> boardImages;
     private LocalDateTime regDate;
     private LocalDateTime modDate;

@@ -13,4 +13,8 @@ public interface ReplyRepository extends JpaRepository<Reply,Long>, BoardSearch 
     @Modifying
     @Query("update Reply set replyText=:replyText where rno=:rno")
     void change(String replyText, long rno);
+
+
+    @Query("select board from Reply where board=:bno")
+    void readReplyByBoard(Long bno);
 }

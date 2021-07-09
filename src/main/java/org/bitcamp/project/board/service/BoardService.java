@@ -47,14 +47,15 @@ public interface BoardService {
                 .build();
     }
 
-    default BoardImage imageDtoToEntity(List<BoardImageDTO> dto) {
+    default Set<BoardImage> imageDtoToEntity(List<BoardImageDTO> dto) {
         Set<BoardImage> imageSet = dto.stream()
                 .map(imageDTO -> BoardImage.builder()
                         .uuid(imageDTO.getUuid())
                         .fileName(imageDTO.getFileName())
+                        .main(true)
                         .build())
                 .collect(Collectors.toSet());
-        return null;
+        return imageSet;
     }
 
 
@@ -90,7 +91,6 @@ public interface BoardService {
 
     List<ListBoardDTO> getList();
 
-    Long fileSave(List<BoardImageDTO> result);
 
     Long boardRegister(BoardDTO dto);
 }

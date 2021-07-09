@@ -38,7 +38,7 @@ public class BoardController {
 
     @Value("C:\\file")
     private String path;
-
+    // 게시물 crud
     @GetMapping("/list")
     public ResponseEntity<ListResponseDTO<BoardDTO>> list(ListRequestDTO listRequestDTO) {
 
@@ -54,14 +54,18 @@ public class BoardController {
         return ResponseEntity.ok(bno);
     }
 
+
+
     // read 번호로 찾는경우 경로에 담으면댐
     @GetMapping("/{bno}")
     public ResponseEntity<BoardDTO> read(@PathVariable Long bno) {
-
+        log.info("리드컨트롤러 들어옴");
         BoardDTO result = boardService.read(bno);
 
         return ResponseEntity.ok().body(result);
     }
+
+
 
     // delete
     @DeleteMapping("/{bno}")
@@ -83,13 +87,19 @@ public class BoardController {
         return ResponseEntity.ok(boardDTO);
     }
 
+    // reply
+    // 댓글 c
     @PutMapping("/reply/{bno}")
-    public ResponseEntity<ReplyDTO> replyUpdate(@PathVariable Long bno , @RequestBody ReplyDTO replyDTO){
+    public ResponseEntity<ReplyDTO> replyCreate(@PathVariable Long bno , @RequestBody ReplyDTO replyDTO){
         log.info("리플라이들어옴");
         // 제이슨 번호 넘겨준상태
         boardService.replyUpdate(bno,replyDTO);
         return ResponseEntity.ok(replyDTO);
     }
+    // 댓글 r
+
+
+
 
     @ResponseBody
     @GetMapping(value = "/down")
@@ -126,12 +136,13 @@ public class BoardController {
 
 
     @ResponseBody
-    @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BoardImageDTO> upload(MultipartFile[] files) {
+    @PostMapping(value = "/upload/{bno}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<BoardImageDTO> upload(@PathVariable Long bno ,MultipartFile[] files) {
         //컨트롤러에서 업로드한 파일은 MultipartFile 변수를 사용하여 전달받습니다.
         // MultipartFile 클래스는 파일에 대한 정보(파일 이름, 크기등)와 파일 관련 메서드(ex. 파일 저장)를 제공합니다.
         log.warn(path + "경로 체크");
         log.info("경로 체크");
+
         // ArrayList 주입시켜서 새로운 값이들어오면 점점늘어나게..
         List<BoardImageDTO> result = new ArrayList<>();
 
@@ -170,13 +181,12 @@ public class BoardController {
 
             }
             // 디티오에저장
-            result.add(BoardImageDTO.builder().uuid(uuid).fileName(fileName).build());
+            result.add(BoardImageDTO.builder().uuid(uuid).fileName(fileName).main(true).build());
 
         // 업로드시 보드이미지엔티티에저장
 
         }
-//        boardService.fileSave(result);
-//
+
         return result;
 
     }

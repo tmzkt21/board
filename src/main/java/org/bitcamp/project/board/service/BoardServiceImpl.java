@@ -23,17 +23,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
     private final BoardImageRepository boardImageRepository;
-
 
 
     // dto 값을 엔티티 바꿔야한다..
@@ -42,24 +42,11 @@ public class BoardServiceImpl implements BoardService{
 
         Board board = dtoToEntity(boardDTO);
 
-       Board save =  boardRepository.save(board);
+        Board save = boardRepository.save(board);
 
         return save.getBno();
     }
 
-    @Override
-    public BoardDTO read(Long bno) {
-
-     Optional<Board> result = boardRepository.findById(bno);
-
-     if(result.isPresent()) {
-         Board board = result.get();
-         return entityToDTO(board);
-     }
-
-
-        return null;
-    }
 
     @Override
     public Long delete(Long bno) {
@@ -73,7 +60,7 @@ public class BoardServiceImpl implements BoardService{
     public BoardDTO update(BoardDTO boardDTO) {
         Optional<Board> result = boardRepository.findById(boardDTO.getBno());
 
-        if (result.isPresent()){
+        if (result.isPresent()) {
             Board entity = result.get();
             entity.changeTile(boardDTO.getTitle());
             entity.changeContent(boardDTO.getContent());
@@ -87,14 +74,13 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public ListResponseDTO<BoardDTO> list(ListRequestDTO dto) {
 
-        Page<Board> result = boardRepository.getSearch(dto.getKeyword(),dto.getPageable());
+        Page<Board> result = boardRepository.getSearch(dto.getKeyword(), dto.getPageable());
 
         List<BoardDTO> dtoList = result.getContent().stream()
                 .map(todo -> entityToDTO(todo))
                 .collect(Collectors.toList());
 
-        PageMaker pageMaker = new PageMaker(dto.getPage(),dto.getSize(),(int)result.getTotalElements());
-
+        PageMaker pageMaker = new PageMaker(dto.getPage(), dto.getSize(), (int) result.getTotalElements());
 
 
         return ListResponseDTO.<BoardDTO>builder()
@@ -105,38 +91,57 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
+    public BoardDTO read(Long bno) {
+        log.info("서비스임플리드들어옴");
+        Optional<Board> result = boardRepository.findById(bno);
+
+        if (result.isPresent()) {
+            Board board = result.get();
+            replyRepository.readReplyByBoard(board.getBno());
+            log.info("리플라이쿼리문");
+            return entityToDTO(board);
+        }
+        log.info("이프문끝");
+        return null;
+    }
+
+    @Override
     public void replyUpdate(Long bno, ReplyDTO replyDTO) {
         Optional<Board> board = boardRepository.findById(bno);
-        log.info(board +"8번게시물데이터");
+        log.info(board + "8번게시물데이터");
         // 8 게시물데이터
-        board.ifPresent(todo-> {
-           Reply reply = Reply.builder()
+        board.ifPresent(todo -> {
+            Reply reply = Reply.builder()
                     .replyText(replyDTO.getReplyText())
                     .board(todo)
                     .build();
             replyRepository.save(reply);
-            log.info(reply+"리플라이 새이브한값");
+            log.info(reply + "리플라이 새이브한값");
         });
 
-     }
+    }
+
 
     @Override
     public List<ListBoardDTO> getList() {
-        Pageable pageable = PageRequest.of(0,10, Sort.by("bno").descending());
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
         Page<Object[]> result = boardRepository.getBoardList(pageable);
         // 엔티티result 디티오
         return result.getContent().stream()
                 .map(arr -> arrToDTO(arr)).collect(Collectors.toList());
     }
 
-    @Override
-    public Long fileSave(List<BoardImageDTO> result) {
 
-        BoardImage image = imageDtoToEntity(result);
-        boardImageRepository.save(image);
-        log.info(image);
-        return null;
-    }
+//    @Override
+//    public Long fileSave(Long bno, List<BoardImageDTO> result) {
+//        log.info(result + "임플넘어옴");
+//        Set<BoardImage> image = imageDtoToEntity(result);
+//        log.info(image + "엔티티변환 이미지");
+//        Board board = Board.builder().bno(bno).boardImages(image).build();
+//        boardRepository.save(board);
+//        log.info(image + "저장되는 이미지값");
+//        return null;
+//    }
 
     @Override
     public Long boardRegister(BoardDTO dto) {

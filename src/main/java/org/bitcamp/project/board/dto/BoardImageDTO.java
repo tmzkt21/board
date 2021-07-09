@@ -11,4 +11,5 @@ public class BoardImageDTO {
 
     private String uuid;
     private String fileName;
+    private boolean main;
 }
