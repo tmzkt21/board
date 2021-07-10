@@ -1,6 +1,7 @@
 package org.bitcamp.project;
 
 import lombok.extern.log4j.Log4j2;
+import org.bitcamp.project.board.dto.BoardDTO;
 import org.bitcamp.project.board.entity.Board;
 import org.bitcamp.project.board.entity.BoardImage;
 import org.bitcamp.project.board.entity.Reply;
@@ -16,7 +17,11 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -155,6 +160,17 @@ class BoardApplicationTests {
         // 저런방식을 쓰지않고 ifpreesnt 람다로 만 돌리면 title은 확인되지만 이미지가 정상적으로 출력되지않는다
 
     }
+    @Test
+    @Transactional
+    public void testGetBoardWithReply() {
+
+        List<Object[]> result = boardRepository.getBoardWithReply(10L);
+
+        for (Object[] arr : result) {
+            log.info(Arrays.toString(arr));
+        }
+    }
+
 
 
 }

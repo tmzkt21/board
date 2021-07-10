@@ -60,22 +60,7 @@ public interface BoardService {
 
 
 
-    //        default FoodStore dtoToEntity(FoodStoreDTO storeDTO){
-//
-//            Set<FoodStoreImage> imageSet = storeDTO.getImageList().stream()
-//                    .map(imageDTO -> FoodStoreImage.builder()
-//                            .uuid(imageDTO.getUuid())
-//                            .fileName(imageDTO.getFileName())
-//                            .main(imageDTO.isMain())
-//                            .build())
-//                    .collect(Collectors.toSet());
-//
-//            return FoodStore.builder()
-//                    .fno(storeDTO.getFno())
-//                    .fname(storeDTO.getFname())
-//                    .storeImages(imageSet)
-//                    .build();
-//        }
+
 
 
     BoardDTO read(Long bno);
@@ -92,5 +77,5 @@ public interface BoardService {
     List<ListBoardDTO> getList();
 
 
-    Long boardRegister(BoardDTO dto);
+    List<Object[]> boardReply(Long bno);
 }

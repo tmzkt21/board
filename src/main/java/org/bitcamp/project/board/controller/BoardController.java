@@ -38,25 +38,25 @@ public class BoardController {
 
     @Value("C:\\file")
     private String path;
-    // 게시물 crud
+    // 게시물 list
     @GetMapping("/list")
     public ResponseEntity<ListResponseDTO<BoardDTO>> list(ListRequestDTO listRequestDTO) {
 
         return ResponseEntity.ok(boardService.list(listRequestDTO));
     }
 
-    // create
+    // create 게시물생성 이미지까지
     @PostMapping("/create")
     public ResponseEntity<Long> create(@RequestBody BoardDTO boardDTO) {
 
         Long bno = boardService.create(boardDTO);
 
-        return ResponseEntity.ok(bno);
+        return ResponseEntity.ok().body(bno);
     }
 
 
 
-    // read 번호로 찾는경우 경로에 담으면댐
+    // read 게시물번호로 찾기
     @GetMapping("/{bno}")
     public ResponseEntity<BoardDTO> read(@PathVariable Long bno) {
         log.info("리드컨트롤러 들어옴");
@@ -67,7 +67,7 @@ public class BoardController {
 
 
 
-    // delete
+    // delete 수정 댓글부터 삭제후 게시판삭제 완료
     @DeleteMapping("/{bno}")
     public ResponseEntity<Long> delete(@PathVariable Long bno) {
 
@@ -77,9 +77,7 @@ public class BoardController {
     }
 
 
-    //update
-    // {} 몇번째 있는걸 찾아서 바꿈
-    // bno / 바꾸는값은 {}
+    //update 게시물번호로 찾아서 변경
     @PutMapping("/{bno}")
     public ResponseEntity<BoardDTO> update(@PathVariable Long bno, @RequestBody BoardDTO boardDTO) {
         boardDTO.setBno(bno);
@@ -87,8 +85,8 @@ public class BoardController {
         return ResponseEntity.ok(boardDTO);
     }
 
-    // reply
-    // 댓글 c
+    // ============================================= 댓글 crud================================
+    // reply 게시물을 bno로 찾아서 댓글 추가
     @PutMapping("/reply/{bno}")
     public ResponseEntity<ReplyDTO> replyCreate(@PathVariable Long bno , @RequestBody ReplyDTO replyDTO){
         log.info("리플라이들어옴");
@@ -96,7 +94,12 @@ public class BoardController {
         boardService.replyUpdate(bno,replyDTO);
         return ResponseEntity.ok(replyDTO);
     }
-    // 댓글 r
+    // 댓글 read
+    @GetMapping("/reply/{bno}")
+    public ResponseEntity<List<Object[]>> readBoardWithReply(@PathVariable Long bno){
+        List<Object[]> dto = boardService.boardReply(bno);
+        return ResponseEntity.ok().body(dto);
+    }
 
 
 
@@ -191,14 +194,7 @@ public class BoardController {
 
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Long> BoardRegister(@RequestBody BoardDTO dto) {
-        log.info(dto +"넘어온디티오값");
 
-        Long fno = boardService.boardRegister(dto);
-
-        return ResponseEntity.ok(fno);
-    }
 
 
     @GetMapping("/getList")
@@ -208,6 +204,4 @@ public class BoardController {
 
       return   ResponseEntity.ok(boardService.getList());
     }
-// 업로드할때 디비에 어떻게 저장할것인가..
-
 }

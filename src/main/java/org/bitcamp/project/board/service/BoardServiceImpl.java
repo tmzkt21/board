@@ -6,11 +6,9 @@ import org.bitcamp.project.board.common.dto.ListRequestDTO;
 import org.bitcamp.project.board.common.dto.ListResponseDTO;
 import org.bitcamp.project.board.common.dto.PageMaker;
 import org.bitcamp.project.board.dto.BoardDTO;
-import org.bitcamp.project.board.dto.BoardImageDTO;
 import org.bitcamp.project.board.dto.ListBoardDTO;
 import org.bitcamp.project.board.dto.ReplyDTO;
 import org.bitcamp.project.board.entity.Board;
-import org.bitcamp.project.board.entity.BoardImage;
 import org.bitcamp.project.board.entity.Reply;
 import org.bitcamp.project.board.repository.BoardImageRepository;
 import org.bitcamp.project.board.repository.BoardRepository;
@@ -21,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -50,16 +49,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Long delete(Long bno) {
-
+        replyRepository.deleteByBno(bno);
         boardRepository.deleteById(bno);
-
         return null;
     }
 
     @Override
     public BoardDTO update(BoardDTO boardDTO) {
         Optional<Board> result = boardRepository.findById(boardDTO.getBno());
-
         if (result.isPresent()) {
             Board entity = result.get();
             entity.changeTile(boardDTO.getTitle());
@@ -92,16 +89,12 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDTO read(Long bno) {
-        log.info("서비스임플리드들어옴");
-        Optional<Board> result = boardRepository.findById(bno);
+       Optional<Board> result = boardRepository.findById(bno);
 
-        if (result.isPresent()) {
-            Board board = result.get();
-            replyRepository.readReplyByBoard(board.getBno());
-            log.info("리플라이쿼리문");
-            return entityToDTO(board);
+        if(result.isPresent()) {
+           Board board = result.get();
+           return entityToDTO(board);
         }
-        log.info("이프문끝");
         return null;
     }
 
@@ -127,29 +120,20 @@ public class BoardServiceImpl implements BoardService {
         Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
         Page<Object[]> result = boardRepository.getBoardList(pageable);
         // 엔티티result 디티오
+        log.info(result + "결과");
         return result.getContent().stream()
                 .map(arr -> arrToDTO(arr)).collect(Collectors.toList());
     }
 
-
-//    @Override
-//    public Long fileSave(Long bno, List<BoardImageDTO> result) {
-//        log.info(result + "임플넘어옴");
-//        Set<BoardImage> image = imageDtoToEntity(result);
-//        log.info(image + "엔티티변환 이미지");
-//        Board board = Board.builder().bno(bno).boardImages(image).build();
-//        boardRepository.save(board);
-//        log.info(image + "저장되는 이미지값");
-//        return null;
-//    }
-
     @Override
-    public Long boardRegister(BoardDTO dto) {
-        Board entity = dtoToEntity(dto);
+    public List<Object[]> boardReply(Long bno) {
+       List<Object[]> board = boardRepository.getBoardWithReply(bno);
+        for (Object[] arr : board) {
+                 Arrays.toString(arr);
+            log.info(Arrays.toString(arr));
+        }
 
-        Board result = boardRepository.save(entity);
-
-        return result.getBno();
+        return board;
     }
 
 
