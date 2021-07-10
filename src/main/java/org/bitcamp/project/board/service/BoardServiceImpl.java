@@ -89,21 +89,21 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardDTO read(Long bno) {
-       Optional<Board> result = boardRepository.findById(bno);
+        Optional<Board> result = boardRepository.findById(bno);
 
-        if(result.isPresent()) {
-           Board board = result.get();
-           return entityToDTO(board);
+        if (result.isPresent()) {
+            Board board = result.get();
+            return entityToDTO(board);
         }
         return null;
     }
 
     @Override
-    public void replyUpdate(Long bno, ReplyDTO replyDTO) {
-        Optional<Board> board = boardRepository.findById(bno);
-        log.info(board + "8번게시물데이터");
+    public Optional<Board> replyCreate(Long bno, ReplyDTO replyDTO) {
+        Optional<Board> result = boardRepository.findById(bno);
+        log.info(result + "8번게시물데이터");
         // 8 게시물데이터
-        board.ifPresent(todo -> {
+         result.ifPresent(todo -> {
             Reply reply = Reply.builder()
                     .replyText(replyDTO.getReplyText())
                     .board(todo)
@@ -111,7 +111,8 @@ public class BoardServiceImpl implements BoardService {
             replyRepository.save(reply);
             log.info(reply + "리플라이 새이브한값");
         });
-
+        log.info(result+"리절트값");
+        return result;
     }
 
 
@@ -127,13 +128,31 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<Object[]> boardReply(Long bno) {
-       List<Object[]> board = boardRepository.getBoardWithReply(bno);
+        List<Object[]> board = boardRepository.getBoardWithReply(bno);
         for (Object[] arr : board) {
-                 Arrays.toString(arr);
+            Arrays.toString(arr);
             log.info(Arrays.toString(arr));
         }
 
         return board;
+    }
+
+    @Override
+    public ReplyDTO replyUpdate(Long rno, ReplyDTO replyDTO) {
+        Optional<Reply> reply = replyRepository.findById(rno);
+        reply.ifPresent(todo -> {
+            todo.changeReplyText(replyDTO.getReplyText());
+            replyRepository.save(todo);
+
+        });
+        return replyDTO;
+    }
+
+    @Override
+    public Long replyDelete(Long rno) {
+        replyRepository.deleteById(rno);
+
+        return rno;
     }
 
 

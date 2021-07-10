@@ -87,22 +87,32 @@ public class BoardController {
 
     // ============================================= 댓글 crud================================
     // reply 게시물을 bno로 찾아서 댓글 추가
-    @PutMapping("/reply/{bno}")
-    public ResponseEntity<ReplyDTO> replyCreate(@PathVariable Long bno , @RequestBody ReplyDTO replyDTO){
+    @PutMapping("/replyCreate/{bno}")
+    public ResponseEntity<Long> replyCreate(@PathVariable Long bno , @RequestBody ReplyDTO replyDTO){
         log.info("리플라이들어옴");
         // 제이슨 번호 넘겨준상태
-        boardService.replyUpdate(bno,replyDTO);
-        return ResponseEntity.ok(replyDTO);
+        boardService.replyCreate(bno,replyDTO);
+        return ResponseEntity.ok(bno);
     }
-    // 댓글 read
+    // 게시물과댓글 같이 read
     @GetMapping("/reply/{bno}")
     public ResponseEntity<List<Object[]>> readBoardWithReply(@PathVariable Long bno){
         List<Object[]> dto = boardService.boardReply(bno);
         return ResponseEntity.ok().body(dto);
     }
+    // 댓글 update
+    @PutMapping("/replyUpdate/{rno}")
+    public ResponseEntity<ReplyDTO> replyUpdate(@PathVariable Long rno,@RequestBody ReplyDTO replyDTO) {
+       ReplyDTO dto =  boardService.replyUpdate(rno,replyDTO);
+        return ResponseEntity.ok().body(dto);
+    }
+    // 댓글 delete
+    @DeleteMapping("/replyDelete/{rno}")
+    public ResponseEntity<Long> replyDelete(@PathVariable Long rno) {
+        boardService.replyDelete(rno);
+        return ResponseEntity.ok(rno);
 
-
-
+    }
 
     @ResponseBody
     @GetMapping(value = "/down")

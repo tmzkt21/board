@@ -11,6 +11,7 @@ import org.bitcamp.project.board.entity.BoardImage;
 import org.bitcamp.project.board.entity.Reply;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,13 @@ public interface BoardService {
         return imageSet;
     }
 
+    default ReplyDTO replyToDTO(Reply reply) {
+        return    ReplyDTO.builder()
+                .rno(reply.getRno())
+                .replyText(reply.getReplyText())
+                .board(reply.getBoard())
+                .build();
+    }
 
 
 
@@ -72,10 +80,14 @@ public interface BoardService {
     ListResponseDTO<BoardDTO> list(ListRequestDTO listRequestDTO);
 
 
-    void replyUpdate(Long bno,ReplyDTO replyDTO);
+    Optional<Board> replyCreate(Long bno, ReplyDTO replyDTO);
 
     List<ListBoardDTO> getList();
 
 
     List<Object[]> boardReply(Long bno);
+
+    ReplyDTO replyUpdate(Long rno,ReplyDTO replyDTO);
+
+    Long replyDelete(Long rno);
 }

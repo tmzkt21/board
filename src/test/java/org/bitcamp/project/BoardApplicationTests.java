@@ -171,6 +171,18 @@ class BoardApplicationTests {
         }
     }
 
+    @Test
+    public void testReplyUpdate() {
+        Optional<Reply> reply = replyRepository.findById(3L);
+        reply.ifPresent(todo-> {
+            todo.changeReplyText("댓글수정~");
+            replyRepository.save(todo);
+        });
+    }
+    @Test
+    public void testReplyDelete() {
+        replyRepository.deleteById(3L);
+    }
 
 
 }
